@@ -1,23 +1,25 @@
 import logo from './logo.svg';
 import './App.css';
+import { Routes, Route } from "react-router-dom";
+
+import { VideoListingPage } from "./Component/Video/VideoListingPage";
+import { VideoPlayer } from "./Component/Video/VideoPlayer";
+import { RecentlyWatched } from "./Component/RecentlyWatched/RecentlyWatched";
+import { LikedVideo } from "./Component/LikedVideos/LikedVideo";
+import { WatchLater } from "./Component/WatchLater/WatchLater";
+import NavBar from "./Component/NavBar/NavBar";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <NavBar />
+      <Routes>
+        <Route path="" element={<VideoListingPage />} />
+        <Route path="/videoplayer/:id" element={<VideoPlayer />} />
+        <Route path="/recentlywatched" element={<RecentlyWatched />} />
+        <Route path="/likedvideos" element={<LikedVideo />} />
+        <Route path="/watchlater" element={<WatchLater />} />
+      </Routes>
     </div>
   );
 }
