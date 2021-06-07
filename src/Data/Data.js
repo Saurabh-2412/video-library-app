@@ -1,7 +1,7 @@
 const Data = [
     {
       poetName: "Swami Mukundananda",
-      topic: "One of the Most Eye Opening Speech",
+      topic: "Eye Opening Speech",
       videoId: "v=170wVs41DiI",
       videoImageId: "170wVs41DiI",
       videoLength: "8:48",

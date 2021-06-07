@@ -9,6 +9,7 @@ import reportWebVitals from './reportWebVitals';
 import { VideoProvider } from "./Contexter/videoContext";
 import { LikedVideosProvider } from "./Contexter/likedVideosContext";
 import { WatchListProvider } from "./Contexter/watchListContext";
+import { PlaylistProvider } from "./Contexter/playListContext";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -16,7 +17,9 @@ ReactDOM.render(
       <VideoProvider>
         <LikedVideosProvider>
           <WatchListProvider>
-            <App />
+            <PlaylistProvider>
+              <App />
+            </PlaylistProvider>
           </WatchListProvider>
         </LikedVideosProvider>
       </VideoProvider>

@@ -69,10 +69,12 @@ export function VideoListingPage() {
               <span style={{ float: "left", marginLeft: "8px" }}>
                 ⌚{item.videoLength}
               </span>
-              {/* <button onClick={() => LikedVideos(item)}>{text}</button>
-              <button onClick={() => WatchLaterVideos(item)}>WatchLater</button> */}
-              <button>Likes{item.likes}</button>
-              <button>Views{item.views}</button>
+              <button>
+                <ion-icon name="heart" style={{color:"orange"}}></ion-icon>{item.likes}
+              </button>
+              <button>
+                <ion-icon name="eye" style={{color:"orange"}}></ion-icon>{item.views}
+              </button>
             </li>
           );
         })}
