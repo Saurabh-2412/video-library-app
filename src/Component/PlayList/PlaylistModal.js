@@ -14,8 +14,6 @@ export const PlaylistModal = ({ VideoData }) => {
     dispatchplaylist,
   } = usePlaylist();
   
-  const playlistVideo = useParams();
-
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       handleOnclick();
@@ -25,7 +23,7 @@ export const PlaylistModal = ({ VideoData }) => {
   const playlist = {
     id:uuid(),
     name: text,
-    videos: []
+    videos: {}
   }
 
   const handleOnclick = () => {
@@ -35,13 +33,13 @@ export const PlaylistModal = ({ VideoData }) => {
   };
 
   const handlePlaylistCheckbox = (e,item) => {
-    console.log("this is targeted id",item.id);
     let listId = e.target.id;
-    console.log("listID",listId)
     if (e.target.checked === true) {
       dispatchplaylist({type: "SAVE_TO_PLAYLIST",payload: VideoData,playlistId:item.id });
+      dispatchplaylist({ type: "SHOW_PLAYLIST_MODAL" })
     } else {
-      dispatchplaylist({type: "SAVE_TO_PLAYLIST", payload: VideoData,playlistId:item.id});
+      dispatchplaylist({type: "REMOVE_FROM_PLAYLIST", payload: VideoData,playlistId:item.id});
+      dispatchplaylist({ type: "SHOW_PLAYLIST_MODAL" })
     }
   };
 
@@ -64,6 +62,7 @@ export const PlaylistModal = ({ VideoData }) => {
                       <ion-icon name="close"></ion-icon>
                   </span>
               </h1>
+              {/** playlist creation */}
               <div className="modal--content">
                   {inputPlaylistBox && (
                       <div className="modal--input">
@@ -81,19 +80,27 @@ export const PlaylistModal = ({ VideoData }) => {
                           </button>
                       </div>
                   )}
+                  {/** playlist adder using checkbox */}
                   {playList.map((item) => {
-                      return (
-                        <div key={item.id} className="playlist-names">
-                            <input
-                            type="checkbox"
-                            name="playlist-item"
-                            className="playlist-checkbox"
-                            id={item.id}
-                            onChange={(e) => handlePlaylistCheckbox(e,item)}
-                            />
-                            <label htmlFor={item.id}>{item.name}</label>
-                        </div>
-                      );
+                    return (
+                      <div key={item.id} className="playlist-names">
+                          <input
+                          type="checkbox"
+                          name="playlist-item"
+                          className="playlist-checkbox"
+                          id={item.id}
+                          checked={
+                            item.videos.find(
+                              (playlistVideo) => playlistVideo.videoId === VideoData.videoId
+                            )
+                              ? true
+                              : false
+                          }
+                          onChange={(e) => handlePlaylistCheckbox(e,item)}
+                          />
+                          <label htmlFor={item.id}>{item.name}</label>
+                      </div>
+                    );
                   })}
               </div>
 

@@ -17,9 +17,6 @@ export const playlistReducer = (state, action) => {
         inputPlaylistBox: state.inputPlaylistBox === false ? true : false,
       };
 
-    case "SAVE_PLAYLIST_ID":
-      return { };
-
     case "CREATE_PLAY_LIST":
       console.log(action.payload); 
       return {
@@ -37,8 +34,8 @@ export const playlistReducer = (state, action) => {
               videos: playlistItem.videos.find(
                 (playlistVideo) => playlistVideo === action.payload.videoId)
                 ? playlistItem.videos.filter(
-                    (playlistVideo) => playlistVideo !== action.payload.videoId)
-                : [...playlistItem.videos, action.payload.videoId],
+                    (playlistVideo) => playlistVideo !== action.payload)
+                : [...playlistItem.videos, action.payload],
             };
           }
           return playlistItem;
@@ -46,12 +43,24 @@ export const playlistReducer = (state, action) => {
       };
 
     case "REMOVE_FROM_PLAYLIST":
-      return {  };
-      
+      return {
+        ...state,
+        playList: state.playList.map((playlistItem) => {
+          if (playlistItem.id === action.playlistId) {
+            return {
+              ...playlistItem,
+              videos: playlistItem.videos.filter(
+                (playlistVideo) => playlistVideo !== action.payload)
+            };
+          }
+          return playlistItem;
+        }), 
+      };
+
     case "DELETE_PLAYLIST":
       return {
-        /* ...state,
-        playList: state.playList.filter((playlistitem) => playList !== playlistitem) */
+        ...state,
+        playList: state.playList.filter((playlistitem) => playlistitem.id === action.playlistId)
       };
 
     default:
