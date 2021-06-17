@@ -10,19 +10,22 @@ import { VideoProvider } from "./Contexter/videoContext";
 import { LikedVideosProvider } from "./Contexter/likedVideosContext";
 import { WatchListProvider } from "./Contexter/watchListContext";
 import { PlaylistProvider } from "./Contexter/playListContext";
+import { AuthProvider } from "../src/Contexter/AuthContext"
 
 ReactDOM.render(
   <React.StrictMode>
     <Router>
-      <VideoProvider>
-        <LikedVideosProvider>
-          <WatchListProvider>
-            <PlaylistProvider>
-              <App />
-            </PlaylistProvider>
-          </WatchListProvider>
-        </LikedVideosProvider>
-      </VideoProvider>
+      <AuthProvider>
+        <VideoProvider>
+          <LikedVideosProvider>
+            <WatchListProvider>
+              <PlaylistProvider>
+                <App />
+              </PlaylistProvider>
+            </WatchListProvider>
+          </LikedVideosProvider>
+        </VideoProvider>
+      </AuthProvider>
     </Router>
   </React.StrictMode>,
   document.getElementById('root')

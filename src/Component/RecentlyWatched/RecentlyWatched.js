@@ -1,4 +1,6 @@
 import React from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { useVideoContext } from "../../Contexter/videoContext";
 import { useLikedVideoContext } from "../../Contexter/likedVideosContext";
@@ -10,9 +12,21 @@ export function RecentlyWatched() {
 
   //console.log("videos in list history", videosInList);
 
-  function Remove(itemId) {
-    //console.log(itemId);
-    dispatchgeneral({ type: "REMOVE_FROM_HISTORY", payload: itemId });
+  useEffect(() => {
+    (async function () {
+      const { data } = await axios.get(
+        "https://VideoLibraryData.saurabhsharma11.repl.co/v1/recentlyPlayedVideos"
+      );
+      dispatchgeneral({ type: "LOADING_HISTORY", payload: data.foundRecentlyPlayedVideos });
+    })();
+  },[dispatchgeneral]);
+
+  async function Remove(itemId) {
+    const { data } = await axios.delete(
+      `https://VideoLibraryData.saurabhsharma11.repl.co/v1/recentlyPlayedVideos/${itemId}`
+    );
+    //console.log(data.video);
+    dispatchgeneral({ type: "REMOVE_FROM_HISTORY", payload: data.video });
     Toaster("Removed from history");
   }
 

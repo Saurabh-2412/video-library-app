@@ -1,4 +1,6 @@
 import React from "react-dom";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import data from "../../Data/Data";
 import { NavLink } from "react-router-dom";
 import { useVideoContext } from "../../Contexter/videoContext";
@@ -6,13 +8,20 @@ import { useLikedVideoContext } from "../../Contexter/likedVideosContext";
 import { useWatchListContext } from "../../Contexter/watchListContext";
 
 export function VideoListingPage() {
-  const { dispatchgeneral } = useVideoContext();
+  const [videoList, setVideoList] = useState([]);
+  const { history,dispatchgeneral } = useVideoContext();
   const { likeList, text, dispatchlike } = useLikedVideoContext();
   const { watchList, dispatchwatchlist } = useWatchListContext();
 
-  function RecentlyWatchedVideos(item) {
-    //console.log("history", item);
-    dispatchgeneral({ type: "ADD_TO_HISTORY", payload: item });
+  async function RecentlyWatchedVideos(item) {
+    if(history.find((video) => video.videoId === item.videoId)){
+      
+    } else {
+      const { data } = await axios.post(
+        "https://VideoLibraryData.saurabhsharma11.repl.co/v1/recentlyPlayedVideos",{item}
+      );
+      dispatchgeneral({ type: "ADD_TO_HISTORY", payload: data.savedVideo });
+    }
   }
 
   function LikedVideos(item) {
@@ -34,24 +43,30 @@ export function VideoListingPage() {
     if (watchList.some((video) => video.videoId === item.videoId)) {
       dispatchwatchlist({
         type: "REMOVE_FROM_WATCHLIST",
-        payload: item.videoId
+        payload: item.videoId,
       });
     } else {
       dispatchwatchlist({
         type: "ADD_TO_WATCHLIST",
-        payload: item
+        payload: item,
       });
     }
     //note : manage a state for button to enable and disable it
   }
 
+  useEffect(() => {
+    (async function () {
+      const { data } = await axios.get(
+        "https://VideoLibraryData.saurabhsharma11.repl.co/v1/videoData"
+      );
+      setVideoList(data.videos);
+    })();
+  }, []);
+
   return (
-    <>
-      {/* <h1 style={{ background: "#41464B", color: "orange", margin: "0px" }}>
-        /VideoListingPage
-      </h1> */}
+    <div>
       <ul className="videoListingUL">
-        {data.map(function (item) {
+        {videoList.map(function (item) {
           return (
             <li key={item.videoId}>
               <NavLink to={`/videoplayer/${item.videoId}`} className="link">
@@ -70,15 +85,17 @@ export function VideoListingPage() {
                 ⌚{item.videoLength}
               </span>
               <button>
-                <ion-icon name="heart" style={{color:"orange"}}></ion-icon>{item.likes}
+                <ion-icon name="heart" style={{ color: "orange" }}></ion-icon>
+                {item.likes}
               </button>
               <button>
-                <ion-icon name="eye" style={{color:"orange"}}></ion-icon>{item.views}
+                <ion-icon name="eye" style={{ color: "orange" }}></ion-icon>
+                {item.views}
               </button>
             </li>
           );
         })}
       </ul>
-    </>
+    </div>
   );
 }

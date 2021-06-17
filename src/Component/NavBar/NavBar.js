@@ -23,6 +23,10 @@ export default function NavBar() {
             <NavLink to="/likedvideos" onClick={toggleNav}>LikedVideos</NavLink>
             <NavLink to="/watchlater" onClick={toggleNav}>WatchLater</NavLink>
             <NavLink to="/playlist" onClick={toggleNav}>PlayList</NavLink>
+            {/**
+              <NavLink to="/userprofile" onClick={toggleNav}>UserProfile</NavLink>
+              <NavLink to="/login" onClick={toggleNav}>Login</NavLink>
+            */}
           </div>
         </div>
 
@@ -69,6 +73,16 @@ export default function NavBar() {
               <span style={{color:"orange",fontWeight:"bolder",position: "relative",top: "-0.25rem"}}></span>
             </span>
           </NavLink>
+
+          { /** for user 
+          <NavLink to="/userprofile">
+              <ion-icon name="person" style={{fontSize: "1.8rem",border:"3px solid gray",borderRadius: "53px"}}></ion-icon>
+              <span style={{color:"orange",fontWeight:"bolder",position: "relative",top: "-0.25rem"}}></span>
+          </NavLink>
+          <NavLink to="/login">
+              <ion-icon name="person" style={{fontSize: "1.8rem",border:"3px solid gray",borderRadius: "53px"}}></ion-icon>
+              <span style={{color:"orange",fontWeight:"bolder",position: "relative",top: "-0.25rem"}}></span>
+          </NavLink>*/}
         </nav>
       </nav>
     </div>

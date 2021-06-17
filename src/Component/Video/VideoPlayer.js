@@ -1,64 +1,113 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ReactPlayer from "react-player";
+import axios from "axios";
 import "../../App.css";
+
 import { useVideoContext } from "../../Contexter/videoContext";
 import { useLikedVideoContext } from "../../Contexter/likedVideosContext";
 import { useWatchListContext } from "../../Contexter/watchListContext";
 import { usePlaylist } from "../../Contexter/playListContext";
 import { Toaster } from "../Utils/Toaster"
 import { PlaylistModal } from "../PlayList/PlaylistModal"
-
 import data from "../../Data/Data";
 
 export const VideoPlayer = () => {
   const { id } = useParams();
-  //console.log("this is ", id);
-  const [suggestedId, setSuggestedId] = useState(id);
+  const [ suggestedId, setSuggestedId ] = useState(id);
+  const [ getVideos,setVideos ] = useState([]);
   const { history, dispatchgeneral } = useVideoContext();
-  const { likeList, text, dispatchlike } = useLikedVideoContext();
-  const [ likeText, setLikeText ] = useState("Like");
+  const { likeList, dispatchlike } = useLikedVideoContext();
   const { watchList, dispatchwatchlist } = useWatchListContext();
   const {dispatchplaylist} = usePlaylist();
-
+  
   const VideoData = data.find((videItem) => videItem.videoId === suggestedId);
-  //console.log(VideoData);
+  const inLikeList = likeList.some((video) => video.videoId === suggestedId);
 
-  function historyHandler(item){
-    setSuggestedId(item.videoId)
-    dispatchgeneral({ type: "ADD_TO_HISTORY", payload: item })
-  }
-
-  function LikedVideos(item) {
-    if (likeList.some((video) => video.videoId === item.videoId)) {
-      dispatchlike({ type: "REMOVE_FROM_LIKED", payload: item.videoId });
-      dispatchgeneral({ type: "ADD_TO_HISTORY", payload: item });
-      Toaster("Removed from liked videos");
+  async function historyHandler(item){
+    if(history.find((video) => video.videoId === item.videoId)){
+      setSuggestedId(item.videoId)
     } else {
-      dispatchlike({ type: "ADD_TO_LIKED", payload: item });
-      dispatchgeneral({ type: "ADD_TO_HISTORY", payload: item });
-      Toaster("Added from liked videos");
-    }
-    if (likeList.some((video) => video.videoId !== item.videoId)) {
-      setLikeText("Dislike");
-    } else {
-      setLikeText("Liked");
+      const { data } = await axios.post(
+        "https://VideoLibraryData.saurabhsharma11.repl.co/v1/recentlyPlayedVideos",{item}
+      );
+      setSuggestedId(item.videoId)
+      dispatchgeneral({ type: "ADD_TO_HISTORY", payload: data.savedVideo })
     }
   }
 
-  function WatchLaterVideos(item) {
-    //console.log("watch later", item);
+  //liked videos
+  useEffect(() => {
+    (async function () {
+      const { data } = await axios.get(
+        "https://VideoLibraryData.saurabhsharma11.repl.co/v1/likedVideos"
+      );
+      dispatchlike({ type: "INITIAL_LOAD", payload: data.foundLikedVideo });
+    })();
+  },[]);
+
+  async function LikedVideos(item) {
+    if(likeList.some((video) => video.videoId === item.videoId)) {
+      try{
+        const { data } = await axios.delete(
+          `https://VideoLibraryData.saurabhsharma11.repl.co/v1/likedVideos/${item.videoId}`
+        );
+        dispatchlike({ type: "REMOVE_FROM_LIKED", payload: data.video });
+        Toaster("Removed from liked videos");
+      }
+      catch(err){
+        console.log(err);
+      }
+    } else {
+      try{
+        const { data } = await axios.post(
+          "https://VideoLibraryData.saurabhsharma11.repl.co/v1/likedVideos",{item}
+        );
+        dispatchlike({ type: "ADD_TO_LIKED", payload: data.savedVideo });
+        Toaster("Added from liked videos");
+      }
+      catch(err){
+        console.log(err);
+      }
+    }
+  }
+
+  //watch later videos
+  useEffect(() => {
+    (async function () {
+      const { data } = await axios.get(
+        "https://VideoLibraryData.saurabhsharma11.repl.co/v1/watchLater"
+      );
+      dispatchwatchlist({ type: "INITIAL_LOAD", payload: data.foundWatchLater });
+    })();
+  },[]);
+
+  async function WatchLaterVideos(item) {
     if (watchList.some((video) => video.videoId === item.videoId)) {
-      dispatchwatchlist({ type: "REMOVE_FROM_WATCHLIST", payload: item.videoId});
-      dispatchgeneral({ type: "ADD_TO_HISTORY", payload: item });
-      Toaster("Removed from watchlist");
+      Toaster("Already added to watch list");
     } else {
-      dispatchwatchlist({ type: "ADD_TO_WATCHLIST", payload: item});
-      dispatchgeneral({ type: "ADD_TO_HISTORY", payload: item }); 
-      Toaster("Added to watch list");
+      try{
+        const { data } = await axios.post(
+          "https://VideoLibraryData.saurabhsharma11.repl.co/v1/watchLater",{item}
+        );
+        dispatchwatchlist({ type: "ADD_TO_WATCHLIST", payload: data.savedVideo });
+        Toaster("Added to watch list");
+      }
+      catch(err){
+        console.log(err);
+      }
     }
-    //note : manage a state for button to enable and disable it
   }
+
+  //suggestedListner
+  useEffect(() => {
+    (async function () {
+      const { data } = await axios.get(
+        "https://VideoLibraryData.saurabhsharma11.repl.co/v1/videoData"
+      );
+      setVideos(data.videos);
+    })();
+  }, []);
 
   return (
     <div>
@@ -72,11 +121,10 @@ export const VideoPlayer = () => {
           url={`https://www.youtube.com/watch?${suggestedId}`}
         />
       </div>
-
       <div className="videoPlayerText">
         <h2>#poetName : {VideoData.poetName}</h2>
         <h4>#topic : {VideoData.topic}</h4>
-        <button onClick={() => LikedVideos(VideoData)}>{likeText}</button>
+        <button onClick={() => LikedVideos(VideoData)}>{inLikeList?"Dislike":"Like"}</button>
         <button onClick={() => WatchLaterVideos(VideoData)}>WatchLater</button>
         <button onClick={() => dispatchplaylist({type: "SHOW_PLAYLIST_MODAL"})}>Playlist</button>
       </div>
@@ -84,12 +132,10 @@ export const VideoPlayer = () => {
       <PlaylistModal VideoData={VideoData}/>
 
       {/* Suggested List */}
+      <h1 style={{ fontFamily: "italic", color: "orange", backgroundColor:"#41464b",margin:"0",border:"1px solid orange"}}>#suggestedList</h1>
       <div className="scrollmenu">
         <ul style={{ padding: "0px" }}>
-          <h1 style={{ fontFamily: "italic", color: "orange" }}>
-            #suggestedList
-          </h1>
-          {data.map(function (item) {
+          {getVideos.map(function (item) {
             return (
               <li key={item.videoId}>
                 <br />
@@ -105,7 +151,7 @@ export const VideoPlayer = () => {
             );
           })}
         </ul>
-      </div>
+      </div> 
     </div>
   );
 };

@@ -1,4 +1,6 @@
 import React from "react";
+import { useEffect } from "react";
+import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { Toaster } from "../Utils/Toaster";
 
@@ -6,16 +8,28 @@ import { useLikedVideoContext } from "../../Contexter/likedVideosContext";
 
 export function LikedVideo() {
   const { likeList, dispatchlike } = useLikedVideoContext();
-  //console.log("videos liked", likedVideosInList);
 
-  function Remove(itemId) {
-    //console.log(itemId);
-    // const LikedVideosRemover = likedVideosInList.filter(
-    //   (video) => video.videoId !== itemId
-    // );
-    // setLikedVideoInList(LikedVideosRemover);
-    dispatchlike({ type: "REMOVE_FROM_LIKED", payload: itemId });
-    Toaster("Removed from liked videos");
+  //liked videos
+  useEffect(() => {
+    (async function () {
+      const { data } = await axios.get(
+        "https://VideoLibraryData.saurabhsharma11.repl.co/v1/likedVideos"
+      );
+      dispatchlike({ type: "INITIAL_LOAD", payload: data.foundLikedVideo });
+    })();
+  }, []);
+
+  async function Remove(itemId) {
+    try{
+      const { data } = await axios.delete(
+        `https://VideoLibraryData.saurabhsharma11.repl.co/v1/likedVideos/${itemId}`
+      );
+      dispatchlike({ type: "REMOVE_FROM_LIKED", payload: data.video });
+      Toaster("Removed from liked videos");
+    }
+    catch(err){
+      console.log(err);
+    }
   }
 
   return (

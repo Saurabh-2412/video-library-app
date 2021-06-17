@@ -1,22 +1,33 @@
+import React,{useEffect} from "react";
+import axios from "axios";
 import { useWatchListContext } from "../../Contexter/watchListContext";
 import { NavLink } from "react-router-dom";
 import { Toaster } from "../Utils/Toaster";
 
 export function WatchLater() {
   const { watchList, dispatchwatchlist } = useWatchListContext();
-  //console.log("watch list listner", watchList);
 
-  function Remove(itemId) {
-    //console.log(itemId);
-    // const LikedVideosRemover = watchLaterList.filter(
-    //   (video) => video.videoId !== itemId
-    // );
-    // setWatchLaterList(LikedVideosRemover);
-    dispatchwatchlist({
-      type: "REMOVE_FROM_WATCHLIST",
-      payload: itemId
-    });
-    Toaster("Removed from watchlist");
+  //watch later videos
+  useEffect(() => {
+    (async function () {
+      const { data } = await axios.get(
+        "https://VideoLibraryData.saurabhsharma11.repl.co/v1/watchLater"
+      );
+      dispatchwatchlist({ type: "INITIAL_LOAD", payload: data.foundWatchLater });
+    })();
+  },[]);
+
+  async function Remove(itemId) {
+    try{
+        const { data } = await axios.delete(
+          `https://VideoLibraryData.saurabhsharma11.repl.co/v1/watchLater/${itemId}`
+        );
+        dispatchwatchlist({ type: "REMOVE_FROM_WATCHLIST", payload: data.video });
+        Toaster("Removed from watchlist");
+      }
+      catch(err){
+        console.log(err);
+      }
   }
 
   return (

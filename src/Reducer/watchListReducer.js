@@ -1,17 +1,26 @@
 export const watchListReducer = (state, action) => {
     switch (action.type) {
-      case "ADD_TO_WATCHLIST":
-        //console.log("this is action.payload", action.payload);
+      case "INITIAL_LOAD":
         return {
           ...state,
-          watchList: [...state.watchList, action.payload]
+          watchList:action.payload
+        }
+
+      case "ADD_TO_WATCHLIST":
+        return {
+          ...state,
+          watchList:[...state.watchList,action.payload]
         };
+
       case "REMOVE_FROM_WATCHLIST":
         return {
           ...state,
-          watchList: state.watchList.filter(
-            (item) => item.videoId !== action.payload
-          )
+          watchList:action.payload
+        };
+
+      default:
+        return{
+           ...state
         };
     }
   };
