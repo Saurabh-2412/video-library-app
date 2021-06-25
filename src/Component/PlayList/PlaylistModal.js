@@ -1,8 +1,10 @@
-import React,{ useState } from "react";
+import React,{ useState,useEffect } from "react";
 import { usePlaylist } from "../../Contexter/playListContext";
+import axios from "axios";
 import "../../App.css";
-import { useParams } from "react-router";
-import uuid from "react-uuid";
+import { PlaylistHeader } from "./PlaylistHeader";
+import { CreatePlaylistInput } from "./CreatePlaylistInput";
+import { CreatePlaylist } from "./CreatePlaylist";
 
 export const PlaylistModal = ({ VideoData }) => {
   const [text, setText] = useState("");
@@ -14,103 +16,74 @@ export const PlaylistModal = ({ VideoData }) => {
     dispatchplaylist,
   } = usePlaylist();
   
-  const handleKeyPress = (event) => {
-    if (event.key === "Enter") {
-      handleOnclick();
-    }
-  };
+  //loading playlist
+  useEffect(() => {
+    (async function () {
+      const { data } = await axios.get(
+        "https://VideoLibraryData.saurabhsharma11.repl.co/v1/playlistVideos"
+      );
+      //console.log("initial load",data)
+      dispatchplaylist({ type: "INITIAL_LOAD", payload: data.playlist });
+    })();
+  },[]);
 
-  const playlist = {
-    id:uuid(),
-    name: text,
-    videos: {}
-  }
-
-  const handleOnclick = () => {
-    dispatchplaylist({ type: "DISPLAY_INPUT_BOX" });
-    text !== "" && dispatchplaylist({ type: "CREATE_PLAY_LIST", payload: playlist });
-    setText("");
-  };
-
-  const handlePlaylistCheckbox = (e,item) => {
+  async function handlePlaylistCheckbox(e,item) {
     let listId = e.target.id;
     if (e.target.checked === true) {
-      dispatchplaylist({type: "SAVE_TO_PLAYLIST",payload: VideoData,playlistId:item.id });
+      const { data } = await axios.post(
+        `https://VideoLibraryData.saurabhsharma11.repl.co/v1/playlistVideos/${item._id}`,
+        {playlistVideoItem:VideoData.videoId,action:"push"});
+      dispatchplaylist({type: "SAVE_TO_PLAYLIST",payload: data.updatedPlaylist});
       dispatchplaylist({ type: "SHOW_PLAYLIST_MODAL" })
     } else {
-      dispatchplaylist({type: "REMOVE_FROM_PLAYLIST", payload: VideoData,playlistId:item.id});
+      const { data } = await axios.post(
+        `https://VideoLibraryData.saurabhsharma11.repl.co/v1/playlistVideos/${item._id}`,
+        {playlistVideoItem:VideoData.videoId,action:"pull"});
+      dispatchplaylist({type: "REMOVE_FROM_PLAYLIST", payload: data.updatedPlaylist});
       dispatchplaylist({ type: "SHOW_PLAYLIST_MODAL" })
     }
   };
 
-  /* const itemChecked = (checkedId) => {
-    console.log("this is item checked id", checkedId);
-    return playList
-      .filter((item) => item.id === checkedId)[0]
-      .videos.some((item) => {
-        //return item.id === showPlaylistModal.videoData.id ? true : false;
-        return item.id === checkedId ? true : false;
-      });
-  }; */
-
   return (
-      <div className={`modal ${showPlaylistModal.status === false ? "modal-hide" : "modal-show"}`}>
-          <div className="modal--window">
-              <h1 className="modal--title">Playlist
-                  <span className="modal--icon"
-                      onClick={() => dispatchplaylist({ type: "SHOW_PLAYLIST_MODAL" })}>
-                      <ion-icon name="close"></ion-icon>
-                  </span>
-              </h1>
-              {/** playlist creation */}
-              <div className="modal--content">
-                  {inputPlaylistBox && (
-                      <div className="modal--input">
-                          <input
-                              type="text"
-                              placeholder="Enter Playlist Name"
-                              className="modal--input-box"
-                              onChange={(event) => setText(event.target.value)}
-                              onKeyPress={(event) => handleKeyPress(event)}
-                          />
-                          <button
-                              className="btn btn-outline-secondary"
-                              onClick={handleOnclick}>
-                              Create
-                          </button>
-                      </div>
-                  )}
-                  {/** playlist adder using checkbox */}
-                  {playList.map((item) => {
-                    return (
-                      <div key={item.id} className="playlist-names">
-                          <input
-                          type="checkbox"
-                          name="playlist-item"
-                          className="playlist-checkbox"
-                          id={item.id}
-                          checked={
-                            item.videos.find(
-                              (playlistVideo) => playlistVideo.videoId === VideoData.videoId
-                            )
-                              ? true
-                              : false
-                          }
-                          onChange={(e) => handlePlaylistCheckbox(e,item)}
-                          />
-                          <label htmlFor={item.id}>{item.name}</label>
-                      </div>
-                    );
-                  })}
-              </div>
+    <div className={`modal ${showPlaylistModal.status === false ? "modal-hide" : "modal-show"}`}>
+      <div className="modal--window">
+        {/** playlist header */}
+        <PlaylistHeader/>
+          
+        <div className="modal--content">
+          {/** playlist creation */}
+          <CreatePlaylist/>
 
-              <div className="modal--buttons">
-                  <button className="btn btn-secondary"
-                      onClick={() => dispatchplaylist({ type: "DISPLAY_INPUT_BOX" })}>
-                      New
-                  </button>
+          {/** playlist checkbox */}
+          {playList.map((item) => {
+            return (
+              <div>
+                <div key={item._id} className="playlist-names">
+                    <input
+                      type="checkbox"
+                      name="playlist-item"
+                      className="playlist-checkbox"
+                      id={item._id}
+                      checked={
+                        item.playlistvideo.some(
+                          (playlistVideo) => playlistVideo === VideoData.videoId
+                        )
+                          ? true
+                          : false
+                      }
+                      onChange={(e) => handlePlaylistCheckbox(e,item)}
+                    />
+                    <label htmlFor={item._id}>{item.playlistName}</label>
+                </div>
               </div>
-          </div>
+            );
+          })}
+        </div>
+          
+        {/** Naming playlist */}
+        <CreatePlaylistInput/>
+
       </div>
+    </div>
   );
 };

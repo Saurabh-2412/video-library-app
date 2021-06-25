@@ -74,15 +74,15 @@ export default function NavBar() {
             </span>
           </NavLink>
 
-          { /** for user 
+          { /** for user */}
           <NavLink to="/userprofile">
               <ion-icon name="person" style={{fontSize: "1.8rem",border:"3px solid gray",borderRadius: "53px"}}></ion-icon>
               <span style={{color:"orange",fontWeight:"bolder",position: "relative",top: "-0.25rem"}}></span>
           </NavLink>
           <NavLink to="/login">
-              <ion-icon name="person" style={{fontSize: "1.8rem",border:"3px solid gray",borderRadius: "53px"}}></ion-icon>
+          <ion-icon name="power" style={{fontSize: "1.8rem",border:"3px solid gray",borderRadius: "53px"}}></ion-icon>
               <span style={{color:"orange",fontWeight:"bolder",position: "relative",top: "-0.25rem"}}></span>
-          </NavLink>*/}
+          </NavLink>
         </nav>
       </nav>
     </div>

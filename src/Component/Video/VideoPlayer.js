@@ -8,8 +8,8 @@ import { useVideoContext } from "../../Contexter/videoContext";
 import { useLikedVideoContext } from "../../Contexter/likedVideosContext";
 import { useWatchListContext } from "../../Contexter/watchListContext";
 import { usePlaylist } from "../../Contexter/playListContext";
-import { Toaster } from "../Utils/Toaster"
-import { PlaylistModal } from "../PlayList/PlaylistModal"
+import { Toaster } from "../Utils/Toaster";
+import { PlaylistModal } from "../PlayList/PlaylistModal";
 import data from "../../Data/Data";
 
 export const VideoPlayer = () => {
@@ -19,7 +19,7 @@ export const VideoPlayer = () => {
   const { history, dispatchgeneral } = useVideoContext();
   const { likeList, dispatchlike } = useLikedVideoContext();
   const { watchList, dispatchwatchlist } = useWatchListContext();
-  const {dispatchplaylist} = usePlaylist();
+  const { dispatchplaylist } = usePlaylist();
   
   const VideoData = data.find((videItem) => videItem.videoId === suggestedId);
   const inLikeList = likeList.some((video) => video.videoId === suggestedId);
@@ -105,6 +105,8 @@ export const VideoPlayer = () => {
       const { data } = await axios.get(
         "https://VideoLibraryData.saurabhsharma11.repl.co/v1/videoData"
       );
+      // const filteredData = data.videos.filter((video) => video.videoId !== id)
+      // console.log("this is filteredData",filteredData);
       setVideos(data.videos);
     })();
   }, []);
@@ -118,7 +120,7 @@ export const VideoPlayer = () => {
           height="100%"
           controls
           playing={false}
-          url={`https://www.youtube.com/watch?${suggestedId}`}
+          url={`https://www.youtube.com/watch?v=${suggestedId}`}
         />
       </div>
       <div className="videoPlayerText">

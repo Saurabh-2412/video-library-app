@@ -1,6 +1,12 @@
 import uuid from "react-uuid";
 export const playlistReducer = (state, action) => {
   switch (action.type) {
+    case "INITIAL_LOAD":
+      return {
+        ...state,
+        playList:action.payload
+      }
+
     case "SHOW_PLAYLIST_MODAL":
       return {
         ...state,
@@ -21,13 +27,23 @@ export const playlistReducer = (state, action) => {
       console.log(action.payload); 
       return {
         ...state,
-        playList: [ ...state.playList, {id:action.payload.id, name:action.payload.name, videos:[]} ]
+        playList: [ ...state.playList, {_id:action.payload._id, playlistName:action.payload.playlistName, playlistvideo:action.payload.playlistvideo} ]
       };
 
     case "SAVE_TO_PLAYLIST":
+        const updatePlaylist = state.playList.map((element) => 
+          {
+            if(element._id === action.payload._id){
+              return {...element,playlistvideo:action.payload.playlistvideo}
+            } else{
+              return element;
+            }
+          }
+        )
       return {
         ...state,
-        playList: state.playList.map((playlistItem) => {
+        playList:updatePlaylist
+        /* playList: state.playList.map((playlistItem) => {
           if (playlistItem.id === action.playlistId) {
             return {
               ...playlistItem,
@@ -39,13 +55,22 @@ export const playlistReducer = (state, action) => {
             };
           }
           return playlistItem;
-        }), 
+        }),  */
       };
 
     case "REMOVE_FROM_PLAYLIST":
+      const removeUpdatePlaylist = state.playList.map((element) => 
+          {
+            if(element._id === action.payload._id){
+              return {...element,playlistvideo:action.payload.playlistvideo}
+            } else{
+              return element;
+            }
+          })
       return {
         ...state,
-        playList: state.playList.map((playlistItem) => {
+        playList:removeUpdatePlaylist
+        /* playList: state.playList.map((playlistItem) => {
           if (playlistItem.id === action.playlistId) {
             return {
               ...playlistItem,
@@ -54,13 +79,13 @@ export const playlistReducer = (state, action) => {
             };
           }
           return playlistItem;
-        }), 
+        }),  */
       };
 
     case "DELETE_PLAYLIST":
       return {
         ...state,
-        playList: state.playList.filter((playlistitem) => playlistitem.id === action.playlistId)
+        playList: state.playList.filter((playlistitem) => playlistitem._id !== action.payload)
       };
 
     default:

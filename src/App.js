@@ -1,6 +1,7 @@
 import './App.css';
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
+import { LoadingData } from "../src/Component/Utils/Loader"
 
 import { useAuth } from "./Contexter/AuthContext";
 import { VideoListingPage } from "./Component/Video/VideoListingPage";
@@ -42,6 +43,7 @@ function App() {
         {/** <PrivateRoute path="/userprofile" element={<UserProfile/>}/> */}
       </Routes>
       <ToastContainer />
+      <LoadingData/>
     </div>
   );
 }

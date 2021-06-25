@@ -1,44 +1,66 @@
-import React from "react";
+import React,{useEffect, useState} from "react";
+import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { usePlaylist } from "../../Contexter/playListContext";
 
 export function PlayList(){
     const { playList, playlistId, inputPlaylistBox, showPlaylistModal, dispatchplaylist} = usePlaylist();
+    
+    //loading playlist
+    useEffect(() => {
+    (async function () {
+        const { data } = await axios.get(
+            "https://VideoLibraryData.saurabhsharma11.repl.co/v1/playlistVideos"
+        );
+        dispatchplaylist({ type: "INITIAL_LOAD", payload: data.playlist });
+        })();
+    },[]);
 
-    function DeleteHandler(playlistId){
-        dispatchplaylist({type:"DELETE_PLAYLIST",payload:playlistId});
+    async function DeleteHandler(playlistId){
+        //console.log(playlistId)
+        const { data } = await axios.delete(
+            `https://VideoLibraryData.saurabhsharma11.repl.co/v1/playlistVideos/${playlistId}`
+          );
+        dispatchplaylist({ type:"DELETE_PLAYLIST",payload:data.playlist._id });
     }
 
-    function RemoveHandler(id,playListItem){
-        dispatchplaylist({type: "REMOVE_FROM_PLAYLIST", payload: playListItem,playlistId:id});
+    async function RemoveHandler(playListId,playListItem){
+        const { data } = await axios.post(
+            `https://VideoLibraryData.saurabhsharma11.repl.co/v1/playlistVideos/${playListId}`,
+            {playlistVideoItem:playListItem,action:"pull"}
+          );
+          console.log(data.updatedPlaylist)
+        dispatchplaylist({type: "REMOVE_FROM_PLAYLIST", payload: data.updatedPlaylist});
     }
 
     return (
         <div>
             <h1>Playlist</h1>
             {playList.map((playListLister) => {
-                const { id, name, videos } = playListLister;
+                //const { id, name, videos } = playListLister;
                 return (
                     <div className="PlayList">
-                        <h1>{playListLister.name}</h1>
+                        <h1>{playListLister.playlistName}</h1>
                         <div className="PlayList-header">
-                            <button onClick={() => DeleteHandler(id)}>Delete Playlist</button>
+                            <button onClick={() => DeleteHandler(playListLister._id)}>Delete Playlist</button>
                         </div><br/>
                         <ul style={{ padding: "0px" }}>
-                            {videos.map((playListItem) => (
-                                <li key={playListItem.videoId} style={{ listStyleType: "none",display: "inline-block"}}>
+                            {playListLister.playlistvideo.map((playListItem) => (
+                                <li key={playListItem} style={{ listStyleType: "none",display: "inline-block"}}>
                                     <div className="card-row">
                                         <div className="card">
-                                            <NavLink to={`/videoplayer/${playListItem.videoId}`} className="link">
+                                            <NavLink to={`/videoplayer/${playListItem}`} className="link">
                                             <img
-                                                src={`https://img.youtube.com/vi/${playListItem.videoImageId}/mqdefault.jpg`}
+                                                src={`https://img.youtube.com/vi/${playListItem}/mqdefault.jpg`}
                                                 alt=""
                                             />
                                             </NavLink>
                                             <div className="" style={{backgroundColor:"#41464b"}}>
-                                                <h3 style={{margin:"0",color:"orange"}} className="">Poet Name : {playListItem.poetName}</h3>
-                                                <span style={{fontWeight:"600",color:"orange"}}>#Topic : {playListItem.topic}</span><br/><br/>
-                                                <button style={{marginBottom:"15px"}} onClick={() => RemoveHandler(id,playListItem)}>Remove</button><br/>
+                                                {/**
+                                                    <h3 style={{margin:"0",color:"orange"}} className="">Poet Name : {playListItem.poetName}</h3>
+                                                    <span style={{fontWeight:"600",color:"orange"}}>#Topic : {playListItem.topic}</span><br/><br/>
+                                                */}
+                                                <button style={{margin:"15px 0px"}} onClick={() => RemoveHandler(playListLister._id,playListItem)}>Remove</button><br/>
                                             </div>
                                         </div>
                                     </div>
