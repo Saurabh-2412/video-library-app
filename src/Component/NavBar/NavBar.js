@@ -23,10 +23,8 @@ export default function NavBar() {
             <NavLink to="/likedvideos" onClick={toggleNav}>LikedVideos</NavLink>
             <NavLink to="/watchlater" onClick={toggleNav}>WatchLater</NavLink>
             <NavLink to="/playlist" onClick={toggleNav}>PlayList</NavLink>
-            {/**
-              <NavLink to="/userprofile" onClick={toggleNav}>UserProfile</NavLink>
-              <NavLink to="/login" onClick={toggleNav}>Login</NavLink>
-            */}
+            <NavLink to="/userprofile" onClick={toggleNav}>UserProfile</NavLink>
+            <NavLink to="/login" onClick={toggleNav}>Login</NavLink>
           </div>
         </div>
 

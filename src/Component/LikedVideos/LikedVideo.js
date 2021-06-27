@@ -3,11 +3,23 @@ import { useEffect } from "react";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { Toaster } from "../Utils/Toaster";
+import { useAuth } from "../../Contexter/AuthContext";
 
 import { useLikedVideoContext } from "../../Contexter/likedVideosContext";
 
 export function LikedVideo() {
   const { likeList, dispatchlike } = useLikedVideoContext();
+  const { token } = useAuth();
+
+  axios.interceptors.request.use(
+    config => {
+      config.headers.authorization = token;
+      return config;
+    },
+    error => {
+      return Promise.reject(error);
+    }
+  )
 
   //liked videos
   useEffect(() => {

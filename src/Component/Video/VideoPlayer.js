@@ -4,6 +4,7 @@ import ReactPlayer from "react-player";
 import axios from "axios";
 import "../../App.css";
 
+import { useAuth } from "../../Contexter/AuthContext";
 import { useVideoContext } from "../../Contexter/videoContext";
 import { useLikedVideoContext } from "../../Contexter/likedVideosContext";
 import { useWatchListContext } from "../../Contexter/watchListContext";
@@ -20,9 +21,34 @@ export const VideoPlayer = () => {
   const { likeList, dispatchlike } = useLikedVideoContext();
   const { watchList, dispatchwatchlist } = useWatchListContext();
   const { dispatchplaylist } = usePlaylist();
+  const { token } = useAuth();
   
   const VideoData = data.find((videItem) => videItem.videoId === suggestedId);
   const inLikeList = likeList.some((video) => video.videoId === suggestedId);
+
+  axios.interceptors.request.use(
+    config => {
+      config.headers.authorization = token;
+      return config;
+    },
+    error => {
+      return Promise.reject(error);
+    }
+  )
+
+  useEffect(() => {
+    (async function () {
+      try{
+        const { data } = await axios.get(
+          "https://VideoLibraryData.saurabhsharma11.repl.co/v1/recentlyPlayedVideos"
+        );
+          dispatchgeneral({ type: "LOADING_HISTORY", payload: data.foundRecentlyPlayedVideos });
+        }
+      catch{
+
+      }
+    })();
+  },[dispatchgeneral]);
 
   async function historyHandler(item){
     if(history.find((video) => video.videoId === item.videoId)){

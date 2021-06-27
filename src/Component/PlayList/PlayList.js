@@ -1,12 +1,24 @@
-import React,{useEffect, useState} from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { usePlaylist } from "../../Contexter/playListContext";
+import { useAuth } from "../../Contexter/AuthContext";
 
 export function PlayList(){
     const { playList, playlistId, inputPlaylistBox, showPlaylistModal, dispatchplaylist} = usePlaylist();
-    
+    const { token } = useAuth();
+
     //loading playlist
+    axios.interceptors.request.use(
+        config => {
+          config.headers.authorization = token;
+          return config;
+        },
+        error => {
+          return Promise.reject(error);
+        }
+      )
+
     useEffect(() => {
     (async function () {
         const { data } = await axios.get(
@@ -29,7 +41,7 @@ export function PlayList(){
             `https://VideoLibraryData.saurabhsharma11.repl.co/v1/playlistVideos/${playListId}`,
             {playlistVideoItem:playListItem,action:"pull"}
           );
-          console.log(data.updatedPlaylist)
+          //console.log(data.updatedPlaylist)
         dispatchplaylist({type: "REMOVE_FROM_PLAYLIST", payload: data.updatedPlaylist});
     }
 
@@ -37,11 +49,10 @@ export function PlayList(){
         <div>
             <h1>Playlist</h1>
             {playList.map((playListLister) => {
-                //const { id, name, videos } = playListLister;
                 return (
                     <div className="PlayList">
                         <h1>{playListLister.playlistName}</h1>
-                        <div className="PlayList-header">
+                        <div key={playListLister._id} className="PlayList-header">
                             <button onClick={() => DeleteHandler(playListLister._id)}>Delete Playlist</button>
                         </div><br/>
                         <ul style={{ padding: "0px" }}>
@@ -56,10 +67,6 @@ export function PlayList(){
                                             />
                                             </NavLink>
                                             <div className="" style={{backgroundColor:"#41464b"}}>
-                                                {/**
-                                                    <h3 style={{margin:"0",color:"orange"}} className="">Poet Name : {playListItem.poetName}</h3>
-                                                    <span style={{fontWeight:"600",color:"orange"}}>#Topic : {playListItem.topic}</span><br/><br/>
-                                                */}
                                                 <button style={{margin:"15px 0px"}} onClick={() => RemoveHandler(playListLister._id,playListItem)}>Remove</button><br/>
                                             </div>
                                         </div>

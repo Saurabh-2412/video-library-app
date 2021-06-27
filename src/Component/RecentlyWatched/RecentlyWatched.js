@@ -9,8 +9,17 @@ import { Toaster } from "../Utils/Toaster";
 export function RecentlyWatched() {
   const { history, dispatchgeneral } = useVideoContext();
   const { likeList, text, dispatchlike } = useLikedVideoContext();
+  const  { token } = JSON.parse(localStorage?.getItem("login")) || {};
 
-  //console.log("videos in list history", videosInList);
+  axios.interceptors.request.use(
+    config => {
+      config.headers.authorization = token;
+      return config;
+    },
+    error => {
+      return Promise.reject(error);
+    }
+  )
 
   useEffect(() => {
     (async function () {

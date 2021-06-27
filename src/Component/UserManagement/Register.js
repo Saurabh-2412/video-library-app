@@ -1,8 +1,11 @@
 import React, {useState} from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Toaster } from "../Utils/Toaster";
 
 export function Register(){
     const navigate = useNavigate();
+    const [records, setRecords] = useState([]);
     const [userRegisteration, setUserRegisteration] = useState({
         username : "",
         email : "",
@@ -18,10 +21,29 @@ export function Register(){
 
     async function handleSubmit(e) {
         e.preventDefault();
+        try{
+            const { data, status } = await axios.post("https://VideoLibraryData.saurabhsharma11.repl.co/v1/userData",
+            {
+                name: userRegisteration.username, password: userRegisteration.password, mail: userRegisteration.email,
+                phone: userRegisteration.number
+            })
+            if(status === 200){
+                const filteredData = data.UserRecord.filter((currentUser) => currentUser.name === userRegisteration.username);
+                setRecords(filteredData);
+                setUserRegisteration({username:"",email:"",number:"",password:""})
+                Toaster("Registered successfully..!");
+                navigate("/Login")
+            } else if(status === 500 || status === 401){
+                Toaster("Unable to register,please try after sometime..!");
+            }
+        }
+        catch(err){
+            console.log(err);
+        }
     }
 
     const HandleReset = () => {
-        
+        setUserRegisteration([...records])
     }
 
     const loginHandler = () => {
@@ -31,7 +53,7 @@ export function Register(){
     return (
         <div>
             <h1>SignUp</h1>
-            <form action="" onSubmit={handleSubmit}>
+            <form action="" onSubmit={handleSubmit} style={{margin:"0",padding:"15px"}}>
                 <div>
                     <label htmlFor="username" style={{margin:"10px"}}>FullName</label>
                     <input type="text" onChange={handleInput} id="username" name="username" value={userRegisteration.username} required/>

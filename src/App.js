@@ -16,17 +16,15 @@ import { Register } from "../src/Component/UserManagement/Register";
 import NavBar from "./Component/NavBar/NavBar";
 
 function App() {
-  /* 
-    const { isUserLoggedIn, setIsUserLoggedIn, token } = useAuth();
+  const { isUserLoggedIn } = useAuth();
 
-    function PrivateRoute({ ...props }) {
-      return isUserLoggedIn ? (
-        <Route {...props} />
-      ) : (
-        <Navigate replace to="/login" />
-      );
-    }
-  */
+  function PrivateRoute({ ...props }) {
+    return isUserLoggedIn ? (
+      <Route {...props} />
+    ) : (
+      <Navigate replace to="/login" />
+    );
+  }
 
   return (
     <div className="App">
@@ -40,7 +38,7 @@ function App() {
         <Route path="/playlist" element={<PlayList/>}/>
         <Route path="/login" element={<Login/>}/>
         <Route path="/register" element={<Register/>}/>
-        {/** <PrivateRoute path="/userprofile" element={<UserProfile/>}/> */}
+        <PrivateRoute path="/userprofile" element={<UserProfile/>}/>
       </Routes>
       <ToastContainer />
       <LoadingData/>

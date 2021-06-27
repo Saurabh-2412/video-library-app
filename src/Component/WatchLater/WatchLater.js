@@ -1,13 +1,24 @@
 import React,{useEffect} from "react";
 import axios from "axios";
 import { useWatchListContext } from "../../Contexter/watchListContext";
+import { useAuth } from "../../Contexter/AuthContext";
 import { NavLink } from "react-router-dom";
 import { Toaster } from "../Utils/Toaster";
 
 export function WatchLater() {
   const { watchList, dispatchwatchlist } = useWatchListContext();
-
+  const { token } = useAuth();
+  
   //watch later videos
+  axios.interceptors.request.use(
+    config => {
+      config.headers.authorization = token;
+      return config;
+    },
+    error => {
+      return Promise.reject(error);
+    }
+  )
   useEffect(() => {
     (async function () {
       const { data } = await axios.get(
@@ -19,6 +30,15 @@ export function WatchLater() {
 
   async function Remove(itemId) {
     try{
+        axios.interceptors.request.use(
+          config => {
+            config.headers.authorization = token;
+            return config;
+          },
+          error => {
+            return Promise.reject(error);
+          }
+        )
         const { data } = await axios.delete(
           `https://VideoLibraryData.saurabhsharma11.repl.co/v1/watchLater/${itemId}`
         );

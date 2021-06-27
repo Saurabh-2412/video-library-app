@@ -6,11 +6,11 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import { AuthProvider } from "../src/Contexter/AuthContext";
 import { VideoProvider } from "./Contexter/videoContext";
 import { LikedVideosProvider } from "./Contexter/likedVideosContext";
 import { WatchListProvider } from "./Contexter/watchListContext";
 import { PlaylistProvider } from "./Contexter/playListContext";
-import { AuthProvider } from "../src/Contexter/AuthContext"
 
 ReactDOM.render(
   <React.StrictMode>

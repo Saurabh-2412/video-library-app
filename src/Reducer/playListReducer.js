@@ -24,7 +24,6 @@ export const playlistReducer = (state, action) => {
       };
 
     case "CREATE_PLAY_LIST":
-      console.log(action.payload); 
       return {
         ...state,
         playList: [ ...state.playList, {_id:action.payload._id, playlistName:action.payload.playlistName, playlistvideo:action.payload.playlistvideo} ]
