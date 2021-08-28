@@ -5,10 +5,7 @@ import { usePlaylist } from "../../Contexter/playListContext";
 export function CreatePlaylist(){
     const [text, setText] = useState("");
     const {
-        playList,
-        playlistId,
         inputPlaylistBox,
-        showPlaylistModal,
         dispatchplaylist,
     } = usePlaylist();
 

@@ -26,7 +26,7 @@ export function WatchLater() {
       );
       dispatchwatchlist({ type: "INITIAL_LOAD", payload: data.foundWatchLater });
     })();
-  },[]);
+  },[dispatchwatchlist]);
 
   async function Remove(itemId) {
     try{

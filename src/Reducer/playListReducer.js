@@ -1,4 +1,3 @@
-import uuid from "react-uuid";
 export const playlistReducer = (state, action) => {
   switch (action.type) {
     case "INITIAL_LOAD":

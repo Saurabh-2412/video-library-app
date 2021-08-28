@@ -1,23 +1,3 @@
-// import { createContext, useContext, useState, useReducer } from "react";
-// import { likeReducer } from "../reducer/likedReducer";
-
-// const likedVideosContext = createContext();
-
-// export const LikedVideosProvider = ({ children }) => {
-//   const [likedVideosInList, setLikedVideoInList] = useState([]);
-//   return (
-//     <likedVideosContext.Provider
-//       value={{ likedVideosInList, setLikedVideoInList }}
-//     >
-//       {children}
-//     </likedVideosContext.Provider>
-//   );
-// };
-
-// export const useLikedVideoContext = () => {
-//   return useContext(likedVideosContext);
-// };
-
 import { createContext, useContext, useReducer } from "react";
 import { likeReducer } from "../Reducer/likedReducer";
 

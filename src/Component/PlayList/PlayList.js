@@ -5,7 +5,7 @@ import { usePlaylist } from "../../Contexter/playListContext";
 import { useAuth } from "../../Contexter/AuthContext";
 
 export function PlayList(){
-    const { playList, playlistId, inputPlaylistBox, showPlaylistModal, dispatchplaylist} = usePlaylist();
+    const { playList, dispatchplaylist} = usePlaylist();
     const { token } = useAuth();
 
     //loading playlist
@@ -26,7 +26,7 @@ export function PlayList(){
         );
         dispatchplaylist({ type: "INITIAL_LOAD", payload: data.playlist });
         })();
-    },[]);
+    },[dispatchplaylist]);
 
     async function DeleteHandler(playlistId){
         //console.log(playlistId)
@@ -41,7 +41,6 @@ export function PlayList(){
             `https://VideoLibraryData.saurabhsharma11.repl.co/v1/playlistVideos/${playListId}`,
             {playlistVideoItem:playListItem,action:"pull"}
           );
-          //console.log(data.updatedPlaylist)
         dispatchplaylist({type: "REMOVE_FROM_PLAYLIST", payload: data.updatedPlaylist});
     }
 

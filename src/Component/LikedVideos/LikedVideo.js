@@ -29,7 +29,7 @@ export function LikedVideo() {
       );
       dispatchlike({ type: "INITIAL_LOAD", payload: data.foundLikedVideo });
     })();
-  }, []);
+  }, [dispatchlike]);
 
   async function Remove(itemId) {
     try{

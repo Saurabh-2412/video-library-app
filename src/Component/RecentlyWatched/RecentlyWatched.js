@@ -1,14 +1,14 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { useVideoContext } from "../../Contexter/videoContext";
-import { useLikedVideoContext } from "../../Contexter/likedVideosContext";
+//import { useLikedVideoContext } from "../../Contexter/likedVideosContext";
 import { Toaster } from "../Utils/Toaster";
 
 export function RecentlyWatched() {
   const { history, dispatchgeneral } = useVideoContext();
-  const { likeList, text, dispatchlike } = useLikedVideoContext();
+  //const { likeList, text, dispatchlike } = useLikedVideoContext();
   const  { token } = JSON.parse(localStorage?.getItem("login")) || {};
 
   axios.interceptors.request.use(

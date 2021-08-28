@@ -70,7 +70,7 @@ export const VideoPlayer = () => {
       );
       dispatchlike({ type: "INITIAL_LOAD", payload: data.foundLikedVideo });
     })();
-  },[]);
+  },[dispatchlike]);
 
   async function LikedVideos(item) {
     if(likeList.some((video) => video.videoId === item.videoId)) {
@@ -106,7 +106,7 @@ export const VideoPlayer = () => {
       );
       dispatchwatchlist({ type: "INITIAL_LOAD", payload: data.foundWatchLater });
     })();
-  },[]);
+  },[dispatchwatchlist]);
 
   async function WatchLaterVideos(item) {
     if (watchList.some((video) => video.videoId === item.videoId)) {

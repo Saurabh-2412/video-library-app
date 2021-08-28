@@ -1,17 +1,16 @@
 import React from "react-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import data from "../../Data/Data";
 import { NavLink } from "react-router-dom";
 import { useVideoContext } from "../../Contexter/videoContext";
-import { useLikedVideoContext } from "../../Contexter/likedVideosContext";
-import { useWatchListContext } from "../../Contexter/watchListContext";
+/* import { useLikedVideoContext } from "../../Contexter/likedVideosContext";
+import { useWatchListContext } from "../../Contexter/watchListContext"; */
 
 export function VideoListingPage() {
   const [videoList, setVideoList] = useState([]);
   const { history,dispatchgeneral } = useVideoContext();
-  const { likeList, text, dispatchlike } = useLikedVideoContext();
-  const { watchList, dispatchwatchlist } = useWatchListContext();
+  /* const { likeList, dispatchlike } = useLikedVideoContext();
+  const { watchList, dispatchwatchlist } = useWatchListContext(); */
 
   async function RecentlyWatchedVideos(item) {
     if(history.find((video) => video.videoId === item.videoId)){
@@ -24,7 +23,7 @@ export function VideoListingPage() {
     }
   }
 
-  function LikedVideos(item) {
+  /* function LikedVideos(item) {
     //console.log("likedVideos", item);
     // if (likedVideosInList.some((video) => video.videoId === item.videoId)) {
     //   setLikedVideoInList([...likedVideosInList]);
@@ -36,9 +35,9 @@ export function VideoListingPage() {
     } else {
       dispatchlike({ type: "ADD_TO_LIKED", payload: item });
     }
-  }
+  } */
 
-  function WatchLaterVideos(item) {
+  /* function WatchLaterVideos(item) {
     //console.log("watch later", item);
     if (watchList.some((video) => video.videoId === item.videoId)) {
       dispatchwatchlist({
@@ -52,7 +51,7 @@ export function VideoListingPage() {
       });
     }
     //note : manage a state for button to enable and disable it
-  }
+  } */
 
   useEffect(() => {
     (async function () {

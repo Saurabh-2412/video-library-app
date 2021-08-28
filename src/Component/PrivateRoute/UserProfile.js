@@ -8,13 +8,13 @@ export function UserProfile(){
     const navigate = useNavigate();
 
     axios.interceptors.request.use(
-        config => {
-          config.headers.authorization = token;
-          return config;
-        },
-        error => {
-          return Promise.reject(error);
-        }
+      config => {
+        config.headers.authorization = token;
+        return config;
+      },
+      error => {
+        return Promise.reject(error);
+      }
     )
 
     useEffect(() => {
@@ -31,7 +31,7 @@ export function UserProfile(){
             }
           }
         })();
-      },[]);
+      },[navigate]);
 
     return (
         <div>

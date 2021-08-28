@@ -11,8 +11,6 @@ export const PlaylistModal = ({ VideoData }) => {
   const { token } = useAuth();
   const {
     playList,
-    playlistId,
-    inputPlaylistBox,
     showPlaylistModal,
     dispatchplaylist,
   } = usePlaylist();
@@ -36,10 +34,10 @@ export const PlaylistModal = ({ VideoData }) => {
       //console.log("initial load",data)
       dispatchplaylist({ type: "INITIAL_LOAD", payload: data.playlist });
     })();
-  },[]);
+  },[dispatchplaylist]);
 
   async function handlePlaylistCheckbox(e,item) {
-    let listId = e.target.id;
+    //let listId = e.target.id;
     if (e.target.checked === true) {
       const { data } = await axios.post(
         `https://VideoLibraryData.saurabhsharma11.repl.co/v1/playlistVideos/${item._id}`,
