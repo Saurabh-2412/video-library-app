@@ -74,6 +74,10 @@ export function Login(){
             {isUserLoggedIn ? "Logout" : "Login"}
             </button>
             <button onClick={SignUp} disabled={isUserLoggedIn ? true : false}>SignUp?</button>
+			<p>
+				UserID : sid@gmail.com
+				Password : 12345
+			</p>
         </div>
     )
 }
