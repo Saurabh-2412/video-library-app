@@ -71,10 +71,10 @@ const Data = [
     },
     {
       poetName: "Sadhguru",
-      topic: "Deepest Meditation",
-      videoId: "GAAP7XZ-pxA",
-      videoImageId: "GAAP7XZ-pxA",
-      videoLength: "10:47",
+      topic: "You Doubt ur'self?",
+      videoId: "eBAVAro8t2g",
+      videoImageId: "eBAVAro8t2g",
+      videoLength: "05:47",
       likes: 20000,
       views: 15000,
       uploadTime: "2Year ago"

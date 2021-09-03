@@ -18,6 +18,7 @@ export default function NavBar() {
         <div style={{ width: winWidth }} className="overlay">
           <button className="closebtn" onClick={toggleNav}></button>
           <div className="overlay-content">
+            <p style={{backgroundColor:"none", color:"orange",fontSize:"3rem"}}><i className="material-icons" style={{fontSize:"3rem"}}>&#xe8e5;</i>TrenderTube</p>
             <NavLink to="/" onClick={toggleNav}>VideoList</NavLink>
             <NavLink to="/recentlywatched" onClick={toggleNav}>RecentlyWatched</NavLink>
             <NavLink to="/likedvideos" onClick={toggleNav}>LikedVideos</NavLink>
@@ -38,7 +39,8 @@ export default function NavBar() {
 
           <NavLink to="/">
             <span>
-              <ion-icon name="home" style={{fontSize:"2rem"}}></ion-icon>
+              {/* <ion-icon name="home" style={{fontSize:"2rem"}}></ion-icon> */}
+              <i className="material-icons" style={{fontSize:"2rem"}}>&#xe87a;</i>
               <span style={{color:"orange",fontWeight:"bolder",position: "relative",top: "-0.25rem"}}></span>
             </span>
           </NavLink>

@@ -31,11 +31,11 @@ function App() {
       <NavBar />
       <Routes>
         <Route path="" element={<VideoListingPage />} />
-        <Route path="/videoplayer/:id" element={<VideoPlayer />} />
-        <Route path="/recentlywatched" element={<RecentlyWatched />} />
-        <Route path="/likedvideos" element={<LikedVideo />} />
-        <Route path="/watchlater" element={<WatchLater />} />
-        <Route path="/playlist" element={<PlayList/>}/>
+        <PrivateRoute path="/videoplayer/:id" element={<VideoPlayer />} />
+        <PrivateRoute path="/recentlywatched" element={<RecentlyWatched />} />
+        <PrivateRoute path="/likedvideos" element={<LikedVideo />} />
+        <PrivateRoute path="/watchlater" element={<WatchLater />} />
+        <PrivateRoute path="/playlist" element={<PlayList/>}/>
         <Route path="/login" element={<Login/>}/>
         <Route path="/register" element={<Register/>}/>
         <PrivateRoute path="/userprofile" element={<UserProfile/>}/>
