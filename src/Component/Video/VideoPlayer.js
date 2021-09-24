@@ -25,6 +25,8 @@ export const VideoPlayer = () => {
   
   const VideoData = data.find((videItem) => videItem.videoId === suggestedId);
   const inLikeList = likeList.some((video) => video.videoId === suggestedId);
+  const inWatchList = watchList.some((video) => video.videoId === suggestedId);
+  //const inPlayList = playList.some((video) => video.videoId === suggestedId);
 
   axios.interceptors.request.use(
     config => {
@@ -151,10 +153,10 @@ export const VideoPlayer = () => {
       </div>
       <div className="videoPlayerText">
         <h2>#poetName : {VideoData.poetName}</h2>
-        <h4>#topic : {VideoData.topic}</h4>
-        <button onClick={() => LikedVideos(VideoData)}>{inLikeList?"Dislike":"Like"}</button>
-        <button onClick={() => WatchLaterVideos(VideoData)}>WatchLater</button>
-        <button onClick={() => dispatchplaylist({type: "SHOW_PLAYLIST_MODAL"})}>Playlist</button>
+        <h4>#topic : {VideoData.topic}</h4><br/>
+        <button style={{color:inLikeList?`orange`:`white`}} onClick={() => LikedVideos(VideoData)}><i className="material-icons">&#xe8dc;</i></button>
+        <button style={{color:inWatchList?`orange`:`white`}} onClick={() => WatchLaterVideos(VideoData)}><i className="material-icons">&#xe88c;</i></button>
+        <button style={{color:"orange"}} onClick={() => dispatchplaylist({type: "SHOW_PLAYLIST_MODAL"})}><i className="material-icons">&#xe030;</i></button><br/>
       </div>
 
       <PlaylistModal VideoData={VideoData}/>

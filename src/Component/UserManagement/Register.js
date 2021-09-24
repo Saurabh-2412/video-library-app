@@ -70,9 +70,9 @@ export function Register(){
                     <label htmlFor="password" style={{margin:"12px"}}>Password</label>
                     <input type="password" onChange={handleInput} autoComplete="off" id="password" name="password" value={userRegisteration.password} required/>
                 </div><br/>
-                <button type="submit">Register</button>
-                <button type="reset" onClick={HandleReset}>Reset</button>
-                <button onClick={loginHandler}>Login</button>
+                <button style={{backgroundColor:"#41464b",color: "orange",fontWeight:"bold",padding: "5px",borderRadius: "5px",fontSize: "medium",margin:"0px 5px"}} type="submit">Register</button>
+                <button style={{backgroundColor:"#41464b",color: "orange",fontWeight:"bold",padding: "5px",borderRadius: "5px",fontSize: "medium",margin:"0px 5px"}} type="reset" onClick={HandleReset}>Reset</button>
+                <button style={{backgroundColor:"#41464b",color: "orange",fontWeight:"bold",padding: "5px",borderRadius: "5px",fontSize: "medium",margin:"0px 5px"}} onClick={loginHandler}>Login</button>
             </form>
         </div>
     )
